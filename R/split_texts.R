@@ -27,13 +27,13 @@
 #' }
 #'
 split_text <- function(text, max_size_bytes = 29000, tokenize = "sentences") {
-
-  purrr::map2_dfr(
-    1:length(text),
-    text,
-    split_text_wh,
-    max_size_bytes = max_size_bytes,
-    tokenize = tokenize
+    
+    purrr::map2_dfr(
+        1:length(text),
+        text,
+        split_text_wh,
+        max_size_bytes = max_size_bytes,
+        tokenize = tokenize
     )
-
+    
 }
