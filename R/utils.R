@@ -13,6 +13,9 @@
 # url1 <- "https://api.deepl.com/v2/translate"
 # url2 <- "https://api-free.deepl.com/v2/translate"
 
+#' Factory function for translate usgin glossary also
+#'
+#' @param apiURL The base URL for the DeepL API
 #' @importFrom httr modify_url POST content
 #' @importFrom tibble tibble
 #' 
@@ -28,9 +31,11 @@ ff_translate_wh <- function(apiURL){
             split_sentences     = TRUE,
             preserve_formatting = FALSE,
             get_detect          = FALSE,
-            auth_key            = "your_key"
+            auth_key            = "your_key",
+            glossary_id         = NULL,
+            ...
         ){
-            
+            print(auth_key)
             # Text prep
             text <- text_check(text)
             
@@ -44,7 +49,8 @@ ff_translate_wh <- function(apiURL){
                             source_lang         = source_lang,
                             target_lang         = target_lang,
                             split_sentences     = split_sentences,
-                            preserve_formatting = preserve_formatting),
+                            preserve_formatting = preserve_formatting,
+                            glossary_id         = glossary_id),
                 httr::add_headers("Authorization" = paste("DeepL-Auth-Key", auth_key))
             )
             
@@ -66,6 +72,110 @@ ff_translate_wh <- function(apiURL){
         } 
     )
 }
+
+#' Factory function for creating a glossary
+#'
+#' @param apiURL The base URL for the DeepL API
+#' @return A function that creates a glossary
+#' @noRd
+ff_create_glossary <- function(apiURL) {
+    force(apiURL)
+    
+    function(
+        name, 
+        source_lang, 
+        target_lang, 
+        entries, 
+        auth_key,
+        ...) {
+        clean_entries <- lapply(entries, trimws)  # Remove leading and trailing whitespace
+        entries_str <- paste(names(clean_entries), clean_entries, sep = "\t", collapse = "\n")
+        
+        body <- list(
+            name = name,
+            source_lang = source_lang,
+            target_lang = target_lang,
+            entries = entries_str,
+            entries_format = "tsv"
+        )
+        
+        cat("API URL:", apiURL, "\n")
+        cat("Request body:\n")
+        print(body)
+        
+        response <- httr::POST(
+            url = paste0(apiURL, "/v2/glossaries"),
+            body = body,
+            httr::add_headers("Authorization" = paste0("DeepL-Auth-Key ", auth_key)),
+            encode = "form"
+        )
+        
+        cat("Response status:", httr::status_code(response), "\n")
+        cat("Response content:\n")
+        print(httr::content(response, "text"))
+        
+        response_check(response)
+        
+        httr::content(response)
+    }
+}
+
+#' Factory function for deleting a glossary
+#'
+#' @param apiURL The base URL for the DeepL API
+#' @return A function that deletes a glossary
+#' @noRd
+ff_delete_glossary <- function(apiURL) {
+    force(apiURL)
+    
+    function(glossary_id, auth_key) {
+        
+        cat("API URL:", apiURL, "\n")
+        cat("Request glossary:\n")
+        print(glossary_id)
+        
+        response <- httr::DELETE(
+            url = paste0(apiURL, "/v2/glossaries/", glossary_id),
+            httr::add_headers("Authorization" = paste0("DeepL-Auth-Key ", auth_key))
+        )
+        
+        response_check(response)
+        
+        httr::status_code(response) == 204
+    }
+}
+
+#' Factory function for listing glossaries
+#'
+#' @param apiURL The base URL for the DeepL API
+#' @return A function that lists all glossaries
+#' @noRd
+ff_list_glossaries <- function(apiURL) {
+    force(apiURL)
+    
+    function(auth_key) {
+        response <- httr::GET(
+            url = paste0(apiURL, "/v2/glossaries"),
+            httr::add_headers("Authorization" = paste0("DeepL-Auth-Key ", auth_key))
+        )
+        
+        response_check(response)
+        
+        httr::content(response)$glossaries
+    }
+}
+
+# Create the actual functions for both API versions
+create_glossary_wh  <- ff_create_glossary("https://api.deepl.com")
+create_glossary2_wh  <- ff_create_glossary("https://api-free.deepl.com")
+
+delete_glossary_wh  <- ff_delete_glossary("https://api.deepl.com")
+delete_glossary2_wh  <- ff_delete_glossary("https://api-free.deepl.com")
+
+list_glossaries_wh  <- ff_list_glossaries("https://api.deepl.com")
+list_glossaries2_wh  <- ff_list_glossaries("https://api-free.deepl.com")
+
+
 
 #' @noRd
 translate_wh  <- ff_translate_wh("https://api.deepl.com/v2/translate") 
