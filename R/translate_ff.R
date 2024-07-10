@@ -8,7 +8,7 @@
 # 
 #  
 
-
+#' 
 ff_translate <- function(.f){
     
     function(text, 
@@ -188,3 +188,4 @@ translate <- ff_translate(.f = translate_wh)
 #' }
 #'
 translate2 <- ff_translate(.f = translate2_wh)
+

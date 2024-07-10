@@ -12,7 +12,9 @@ Encoding: UTF-8
 URL: https://www.deepl.com/translator
 BugReports: https://github.com/zumbov2/deeplr/issues
 Imports: utf8, httr, tibble, purrr, tokenizers
-Suggests: dplyr
+Suggests:  
+    dplyr,
+    testthat (>= 3.0.0)
 RoxygenNote: 7.3.1
 License: MIT + file LICENSE
 NeedsCompilation: no
@@ -34,3 +36,4 @@ Collate:
     'create_glossary_ff.R'
     'delete_glossary_ff.R'
     'list_glossaries_ff.R'
+Config/testthat/edition: 3

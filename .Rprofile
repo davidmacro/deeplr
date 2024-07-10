@@ -1,0 +1,1 @@
+Sys.setenv(API_KEY_DEEPL_FREE = "be03a326-2445-4644-bd4e-fe92978c4e50:fx")
