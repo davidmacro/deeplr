@@ -1,11 +1,4 @@
-# ----------------------------------------------------------
-# Filename: utils.R 
-# ---------------------------------------------------------- 
-#   Author: David Macro (david@dataim.nl)
-#     Date: 2024-07-05
-#            
-# ----------------------------------------------------------
-# 
+ 
 # Note: using function factories saves a lot of duplication. 
 #       especially when the only diff between translate_wh
 #       and translate_wh2 is the apiURL 
@@ -13,7 +6,7 @@
 # url1 <- "https://api.deepl.com/v2/translate"
 # url2 <- "https://api-free.deepl.com/v2/translate"
 
-#' Factory function for translate usgin glossary also
+#' Factory function for translate using glossary also
 #'
 #' @param apiURL The base URL for the DeepL API
 #' @importFrom httr modify_url POST content

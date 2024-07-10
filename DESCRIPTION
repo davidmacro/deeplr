@@ -1,11 +1,10 @@
 Package: deeplr
 Type: Package
 Title: Interface to the 'DeepL' Translation API
-Version: 2.0.2
+Version: 2.0.3
 Authors@R: c(
     person("David", "Zumbach", role = c("aut", "cre"), email = "david.zumbach@gfzb.ch"), 
-    person("Paul C.", "Bauer", role = c("aut"), email = "mail@paulcbauer.eu")
-    )
+    person("Paul C.", "Bauer", role = c("aut"), email = "mail@paulcbauer.eu"))
 Description: A wrapper for the 'DeepL' Pro API <https://www.deepl.com/docs-api>, a web service
     for translating texts between different languages. A DeepL API developer account is required
     to use the service (see <https://www.deepl.com/pro#developer>).
@@ -32,4 +31,6 @@ Collate:
     'pimp_ff.R'
     'detect_ff.R'
     'split_texts.R'
-    
+    'create_glossary_ff.R'
+    'delete_glossary_ff.R'
+    'list_glossaries_ff.R'
