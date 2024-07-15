@@ -1,6 +1,6 @@
 library(testthat)
 
-test_that("Glossary can be created and used", {
+test_that("Glossary can be created and used wit paid Key", {
     skip_if_no_auth()  # Skip if no authentication key is available
     
     # Test creating a glossary
@@ -39,9 +39,52 @@ test_that("Glossary can be created and used", {
     expect_true(delete_result)
 })
 
+test_that("Glossary can be created and used wit free Key", {
+    skip_if_no_auth()  # Skip if no authentication key is available
+    
+    # Test creating a glossary
+    test_glossary_name <- paste0("test_glossary_", as.integer(Sys.time()))
+    test_entries <- list("Hello" = "Hola", "World" = "Mundo")
+    
+    glossary <- create_glossary2(
+        name = test_glossary_name,
+        source_lang = "EN",
+        target_lang = "ES",
+        entries = test_entries,
+        auth_key = Sys.getenv("DEEPL_AUTH_KEY_FREE")
+    )
+    
+    expect_is(glossary, "list")
+    expect_true("glossary_id" %in% names(glossary))
+    
+    # Test using the glossary
+    test_text <- "Hello World!"
+    translation <- translate2(
+        text = test_text,
+        target_lang = "ES",
+        source_lang = "EN",
+        glossary_id = glossary$glossary_id,
+        auth_key = Sys.getenv("DEEPL_AUTH_KEY_FREE")
+    )
+    
+    expect_equal(translation, "Hola Mundo !")
+    
+    # Clean up: delete the test glossary
+    delete_result <- delete_glossary2(
+        glossary_id = glossary$glossary_id,
+        auth_key = Sys.getenv("DEEPL_AUTH_KEY_FREE")
+    )
+    
+    expect_true(delete_result)
+})
+
+
+
+
+
 # Helper function to skip tests if no auth key is available
 skip_if_no_auth <- function() {
-    if (Sys.getenv("DEEPL_AUTH_KEY") == "") {
+    if (Sys.getenv("DEEPL_AUTH_KEY") == "" || Sys.getenv("DEEPL_AUTH_KEY_FREE") == "") {
         skip("No DeepL authentication key available")
     }
 }
