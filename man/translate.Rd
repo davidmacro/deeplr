@@ -11,7 +11,9 @@ translate(
   split_sentences = TRUE,
   preserve_formatting = FALSE,
   get_detect = FALSE,
-  auth_key = "your_key"
+  auth_key = "your_key",
+  glossary_id = NULL,
+  ...
 )
 }
 \arguments{

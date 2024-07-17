@@ -1,11 +1,10 @@
 Package: deeplr
 Type: Package
 Title: Interface to the 'DeepL' Translation API
-Version: 2.0.2
+Version: 2.0.3
 Authors@R: c(
     person("David", "Zumbach", role = c("aut", "cre"), email = "david.zumbach@gfzb.ch"), 
-    person("Paul C.", "Bauer", role = c("aut"), email = "mail@paulcbauer.eu")
-    )
+    person("Paul C.", "Bauer", role = c("aut"), email = "mail@paulcbauer.eu"))
 Description: A wrapper for the 'DeepL' Pro API <https://www.deepl.com/docs-api>, a web service
     for translating texts between different languages. A DeepL API developer account is required
     to use the service (see <https://www.deepl.com/pro#developer>).
@@ -13,7 +12,9 @@ Encoding: UTF-8
 URL: https://www.deepl.com/translator
 BugReports: https://github.com/zumbov2/deeplr/issues
 Imports: utf8, httr, tibble, purrr, tokenizers
-Suggests: dplyr
+Suggests:  
+    dplyr,
+    testthat (>= 3.0.0)
 RoxygenNote: 7.3.1
 License: MIT + file LICENSE
 NeedsCompilation: no
@@ -32,4 +33,7 @@ Collate:
     'pimp_ff.R'
     'detect_ff.R'
     'split_texts.R'
-    
+    'create_glossary_ff.R'
+    'delete_glossary_ff.R'
+    'list_glossaries_ff.R'
+Config/testthat/edition: 3

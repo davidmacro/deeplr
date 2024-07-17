@@ -8,7 +8,7 @@
 # 
 #  
 
-
+#' 
 ff_translate <- function(.f){
     
     function(text, 
@@ -17,7 +17,9 @@ ff_translate <- function(.f){
         split_sentences     = TRUE,
         preserve_formatting = FALSE,
         get_detect          = FALSE, 
-        auth_key            = "your_key"
+        auth_key            = "your_key",
+        glossary_id         = NULL,
+        ...
     ) {
         
         # Inputs variables
@@ -29,29 +31,29 @@ ff_translate <- function(.f){
             split_sentences     = split_sentences,
             preserve_formatting = preserve_formatting,
             get_detect          = get_detect,
+            glossary_id         = glossary_id,
             auth_key            = auth_key
         )
         
         # Without source_lang
         if(is.null(source_lang)){ 
             
-            .func <- `if`(!get_detect, purrr::map2_chr ,purrr::map2_dfr)
+            .func <- if(!get_detect) purrr::map2_chr else purrr::map2_dfr
             
             translation_vec <- .func(
-                .x = text, 
-                .y = target_lang, 
-                .f = translate2_wh, !!!commonArgs
+                text, 
+                target_lang, 
+                ~ do.call(.f, c(list(text = .x, target_lang = .y), commonArgs))
             )  
         }
         
         # With source_lang
         if (!is.null(source_lang)){  
             translation_vec <- purrr::pmap_chr(
-                .l =  list(text        = text, 
-                    target_lang = target_lang, 
-                    source_lang = source_lang),
-                .f =  translate2_wh,
-                !!!commonArgs
+                list(text = text, 
+                     target_lang = target_lang, 
+                     source_lang = source_lang),
+                ~ do.call(.f, c(list(text = ..1, target_lang = ..2, source_lang = ..3), commonArgs))
             ) 
         }
         
@@ -186,3 +188,4 @@ translate <- ff_translate(.f = translate_wh)
 #' }
 #'
 translate2 <- ff_translate(.f = translate2_wh)
+
