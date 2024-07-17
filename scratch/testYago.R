@@ -1,17 +1,50 @@
-translate2(
-    text="Hello2 World3",
-    source_lang="EN",
-    target_lang = "ES",
-    auth_key = "your_api_key", 
-    glossary_id = "205c687a-5be6-4eed-b010-c217d906904")
+# ----------------------------------------------------------
+# Filename: testYago.R 
+# ---------------------------------------------------------- 
+#   Author: David Macro (david@dataim.nl)
+#     Date: 2024-07-17
+#  Purpose: 
+# ----------------------------------------------------------
+# 
+#  
+rm(list=ls())
 
-list_glossaries2(auth_key = "your_api_key")
-create_glossary2(
-    name = "Prueba 4",
+devtools::load_all()
+
+# Translating without glossary still works
+translate(
+    text        = "Hello2 World3",
     source_lang = "EN",
     target_lang = "ES",
-    entries = list("Hello3" = "Que Pasa 2", "World3" = " En el Mundo 2"),
-    auth_key = "your_api_key"
+    auth_key    = Sys.getenv("DEEPL_API_KEY")
+)
+ 
+list_glossaries(
+    auth_key = Sys.getenv("DEEPL_API_KEY")
 )
 
-delete_glossary2(glossary_id = "b674ff04-3ed9-44e3-a1e9-eca5b2112174", auth_key = "your_api_key")
+create_glossary(
+    name        = "Spanish TestGlossary",
+    source_lang = "EN",
+    target_lang = "ES",
+    entries     = list("Hello2" = "Que Pasa 2", "World3" = " En el Mundo 2"),
+    auth_key    = Sys.getenv("DEEPL_API_KEY")
+)
+
+glossaries <- list_glossaries(
+    auth_key = Sys.getenv("DEEPL_API_KEY")
+)
+
+test.glossary.id <- purrr::keep(glossaries, ~.x$name == "Spanish TestGlossary")[[1]]$glossary_id
+
+# Translating without glossary still works
+translate(
+    text        = "Hello2 World3",
+    source_lang = "EN",
+    target_lang = "ES",
+    auth_key    = Sys.getenv("DEEPL_API_KEY"),
+    glossary_id = test.glossary.id
+)
+
+
+delete_glossary(glossary_id = test.glossary.id, auth_key = Sys.getenv("DEEPL_API_KEY"))
